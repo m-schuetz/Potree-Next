@@ -1,0 +1,229 @@
+<html>
+<head>
+<meta http-equiv="origin-trial" content="AmgwKkyLeQetn/dhGSsOlfOa/QLp1JOUgqyYSeFTadHtP83gkgHrDEj62CN//MgSjDbVwOY/LAr4qg/XyU2YYwMAAABdeyJvcmlnaW4iOiJodHRwczovL3BvdHJlZS5vcmc6NDQzIiwiZmVhdHVyZSI6IldlYkdQVSIsImV4cGlyeSI6MTY3NTIwOTU5OSwiaXNTdWJkb21haW4iOnRydWV9">
+<link rel="stylesheet" href="resources/potree.css">
+</head>
+<body style="padding: 0; margin: 0">
+
+<div id="potree" style="width: 100%; height: 100%; position: fixed;">
+	<span style="position: relative; width: 100%; height: 100%; display: flex">
+		<canvas id="canvas" width="800" height="600" style="width: 100%; height: 100%;"></canvas>
+		<pre id="msg_resources"></pre>
+		<pre id="msg_dbg"></pre>
+	</span>
+</div>
+
+<span id="big_message"></span>
+
+<script type="importmap">
+{
+	"imports": {
+		"potree":        "./src/Potree.js",
+		"lazperf":       "./libs/laz-perf/laz-perf.js",
+		"toolbar":       "./src/modules/toolbar/toolbar.js",
+		"sidebar":       "./src/modules/sidebar/sidebar.js",
+		"dat.gui":       "./libs/dat.gui/dat.gui.module.js",
+		"BinaryHeap":    "./libs/BinaryHeap/BinaryHeap.js",
+		"tween":         "./libs/tween/tween.esm.js",
+		"range-select":  "./libs/range-select/RangeSelect.js",
+		"json5":         "./libs/json5/json5.js",
+		"proj4":         "./libs/proj4js/proj4-src.js",
+		"radix-sort-esm":   "./libs/webgpu-radix-sort/dist/esm/radix-sort-esm.js"
+	}
+}
+</script>
+
+<script type="module">
+
+	import {Potree} from "potree";
+	import {Vector3, Matrix4, Box3, Mesh, Geometry, geometries, Points, PointLight} from "potree";
+	import {WireframeMaterial, TriangleColorMaterial} from "potree";
+	import {CopcLoader, Image360, Images360, Images360Loader, SplatType} from "potree";
+	import {PotreeLoader, Potree3Loader, TDTilesLoader} from "potree";
+	import "range-select";
+	import {proj4} from "proj4";
+	import * as TWEEN from "tween";
+	import {load as loadGLB} from "./src/misc/GLBLoader.js";
+	import {MAPPINGS} from "./src/modules/attributes/mappings.js";
+
+	console.log(proj4.version);
+
+	// import {installToolbar} from "toolbar";
+	import {installSidebar} from "sidebar";
+
+	let canvas = document.getElementById("canvas");
+	let elPotree = document.getElementById("potree");
+	let potree = await Potree.init(canvas);
+	let {scene, controls} = potree;
+	// installToolbar(potree.renderer.canvas, potree);
+
+	// window.Potree = {
+	// 	version: "abc",
+	// };
+
+	window.sidebar = installSidebar(elPotree, potree);
+
+	window.Potree = Potree;
+	window.potree = potree;
+	window.Vector3 = Vector3;
+
+	Potree.settings.edlEnabled = true;
+	Potree.settings.dilateEnabled = false;
+	Potree.settings.hqsEnabled = true;
+
+
+	// default, if not overriden later on
+	controls.set({
+		position: [-19.0, 13.6, 12.2],
+		pivot: [-0.0, 2.2, 3.9],
+	});
+
+	Potree.settings.pointBudget = 4_000_000;
+	// Potree.settings.pointBudget = 30_000;
+	// Potree.settings.attribute = "classification";
+
+	Potree.settings.attribute = "rgba";
+	Potree.settings.pointSize = 3;
+	Potree.settings.splatType = SplatType.POINTS;
+	// Potree.settings.pointBudget = 30085;
+
+	
+	// // CopcLoader.load("./sofi.copc.laz").then(pointcloud => {
+	// CopcLoader.load("./autzen-classified.copc.laz").then(pointcloud => {
+
+	// 	window.pointcloud = pointcloud;
+	// 	pointcloud.name = "Autzen Stadium";
+
+	// 	let min = new Vector3(...pointcloud.loader.header.min);
+	// 	let max = new Vector3(...pointcloud.loader.header.max);
+
+	// 	let center = min.add(max).multiplyScalar(0.5);
+	// 	let size = min.distanceTo(max);
+		
+	// 	controls.set({
+	// 		yaw: -0.2,
+	// 		pitch: 0.8,
+	// 		radius: 1.5 * size,
+	// 		pivot: center,
+	// 	});
+
+	// 	scene.add(scene.root, pointcloud);
+	// });
+	
+
+	// Potree.load("./resources/pointclouds/heidentor/metadata.json", {name: "CA13"}).then(pointcloud => {
+	// 	pointcloud.name = "Heidentor";
+	// 	scene.root.children.push(pointcloud);
+	// });
+
+	// loadGLB("./resources/models/australia_gas.glb", {
+	// 	onStart: (node) => {
+	// 		node.rotation.makeIdentity();
+	// 		node.rotation.rotate(1.2, {x: 1, y: 0, z: 0});
+	// 		node.rotation.rotate(-0.1, {x: 0, y: 1, z: 0});
+	// 		node.scale.set(2, 2, 2);
+	// 		node.position.set(-25, -10, 10);
+
+	// 		node.name = "australia_gas";
+
+	// 		scene.root.children.push(node);
+	// 	}, onNode: (mesh) => {
+	// 		console.log(mesh);
+	// 	}
+	// });
+
+	// Potree.load("./resources/models/ruins.glb").then(model => {
+
+	// 	console.log(model);
+
+	// 	// scene.root.children.push(model);
+
+	// });
+
+	// Potree.load("./resources/pointclouds/heidentor/metadata.json").then(pointcloud => {
+
+	// 	scene.root.children.push(pointcloud);
+
+	// 	controls.set({
+	// 		position: [20, 20, 20], 
+	// 		pivot: [0, 0, 0]
+	// 	});
+
+	// });
+
+	// Potree.load("./resources/pointclouds/CA13/metadata.json").then(pointcloud => {
+	Potree.load("./resources/pointclouds/lidar2022_las14_extra_attributes.las_converted/metadata.json").then(pointcloud => {
+
+		window.pointcloud = pointcloud;
+		pointcloud.name = "sitn extra attributes";
+
+		controls.set({
+			position: [2562044.2, 1204892.3, 809.3],
+			pivot:    [2562237.4, 1205156.4, 467.7]
+		});
+
+		let material = pointcloud.material;
+
+		console.log(material.attributes);
+		
+		material.registerMapping(MAPPINGS.TERRASCAN_NORMAL);
+		material.registerMapping(MAPPINGS.TERRASCAN_GROUP);
+
+		scene.root.children.push(pointcloud);
+	});
+
+
+
+
+	// Potree.load("./resources/pointclouds/aerial_lidar2019_2524_1197_laz14_dip/metadata.json").then(pointcloud => {
+
+	// 	window.pointcloud = pointcloud;
+	// 	pointcloud.name = "sitn dip";
+
+	// 	controls.set({
+	// 		position: [2524961.6, 1198245.8, 1646.2], 
+	// 		pivot: [2524503.6, 1197488.7, 1098.6]
+	// 	});
+
+	// 	scene.root.children.push(pointcloud);
+	// });
+
+
+	// Potree.load("./nocommit/F_pointclouds/CA13_morro_bay/morro_bay.las_converted/metadata.json").then(pointcloud => {
+
+	// 	window.pointcloud = pointcloud;
+	// 	pointcloud.name = "CA13";
+
+	// 	controls.set({
+	// 		position: [694616.5, 3916084.9, 216.0], 
+	// 		pivot: [694733.8, 3916401.9, 19.8]
+	// 	});
+
+	// 	scene.root.children.push(pointcloud);
+	// });
+
+	let origin = new Vector3(0, 0, 0);
+	let X = new Vector3(10, 0, 0);
+	let Y = new Vector3(0, 10, 0);
+	let Z = new Vector3(0, 0, 10);
+	let red = new Vector3(255, 0, 0);
+	let green = new Vector3(0, 255, 0);
+	let blue = new Vector3(0, 0, 255);
+
+	import {sphere} from "./src/modules/geometries/sphere.js";
+
+	potree.onUpdate( () => {
+
+		// potree.renderer.drawLine(origin, X, red);
+		// potree.renderer.drawLine(origin, Y, green);
+		// potree.renderer.drawLine(origin, Z, blue);
+
+		// potree.renderer.drawSphere(origin, 2);
+	});
+
+
+
+</script>
+
+</body>
+</html>
