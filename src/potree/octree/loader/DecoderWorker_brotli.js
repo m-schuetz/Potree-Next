@@ -143,9 +143,9 @@ async function load(event){
 						| (dealign24b(((mc_1 >>> 24) | (mc_0 << 8)) >>> 2) << 8);
 
 
-				r = r | 255 ? r / 256 : r;
-				g = g | 255 ? g / 256 : g;
-				b = b | 255 ? b / 256 : b;
+				r = r > 255 ? r / 256 : r;
+				g = g > 255 ? g / 256 : g;
+				b = b > 255 ? b / 256 : b;
 
 				outView.setUint16(targetByteOffset + 6 * j + 0, r, true);
 				outView.setUint16(targetByteOffset + 6 * j + 2, g, true);

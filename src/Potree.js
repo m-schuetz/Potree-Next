@@ -43,8 +43,6 @@ export * from "./potree/ChunkedBuffer.js";
 export * from "./modules/attributes/mappings.js";
 export * from "./interaction/measure.js";
 
-
-// export {render as renderPoints} from "./prototyping/renderPoints.js";
 export {render as renderPointsOctree}  from "./potree/renderPointsOctree.js";
 export {render as renderQuadsOctree}  from "./potree/renderQuadsOctree.js";
 export {dilate}  from "./potree/dilate.js";
@@ -127,6 +125,7 @@ const settings = {
 	updateEnabled: true,
 	gradient: Gradients.SPECTRAL,
 	splatType: SplatType.POINTS,
+	showDebugMessages: false
 };
 
 const state = {
@@ -137,6 +136,7 @@ const state = {
 	num3DTileNodes: 0,
 	num3DTileTriangles: 0,
 	
+	numVisiblePoints: 0,
 	numPoints: 0,
 	numVoxels: 0,
 	numElements: 0,

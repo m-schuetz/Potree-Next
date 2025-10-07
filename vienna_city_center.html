@@ -17,16 +17,16 @@
 <script type="importmap">
 {
 	"imports": {
-		"potree":           "./src/Potree.js",
-		"lazperf":          "./libs/laz-perf/laz-perf.js",
-		"toolbar":          "./src/modules/toolbar/toolbar.js",
-		"sidebar":          "./src/modules/sidebar/sidebar.js",
-		"dat.gui":          "./libs/dat.gui/dat.gui.module.js",
-		"BinaryHeap":       "./libs/BinaryHeap/BinaryHeap.js",
-		"tween":            "./libs/tween/tween.esm.js",
-		"range-select":     "./libs/range-select/RangeSelect.js",
-		"json5":            "./libs/json5/json5.js",
-		"proj4":            "./libs/proj4js/proj4-src.js",
+		"potree":        "./src/Potree.js",
+		"lazperf":       "./libs/laz-perf/laz-perf.js",
+		"toolbar":       "./src/modules/toolbar/toolbar.js",
+		"sidebar":       "./src/modules/sidebar/sidebar.js",
+		"dat.gui":       "./libs/dat.gui/dat.gui.module.js",
+		"BinaryHeap":    "./libs/BinaryHeap/BinaryHeap.js",
+		"tween":         "./libs/tween/tween.esm.js",
+		"range-select":  "./libs/range-select/RangeSelect.js",
+		"json5":         "./libs/json5/json5.js",
+		"proj4":         "./libs/proj4js/proj4-src.js",
 		"radix-sort-esm":   "./libs/webgpu-radix-sort/dist/esm/radix-sort-esm.js"
 	}
 }
@@ -71,13 +71,13 @@
 	window.Vector3 = Vector3;
 
 	// default, if not overriden later on
-	controls.set({
-		position: [2.2, 3.4, 5.3], 
-		pivot:    [-0.2, -0.1, 1.3]
-	});
+	// controls.set({
+	// 	position: [-19.0, 13.6, 12.2],
+	// 	pivot: [-0.0, 2.2, 3.9],
+	// });
 
-	import {CopcLoader, Image360, Images360, SplatType, GaussianSplats} from "potree";
-	import {PotreeLoader, Potree3Loader, GSLoader} from "potree";
+	import {CopcLoader, Image360, Images360, SplatType} from "potree";
+	import {PotreeLoader, Potree3Loader} from "potree";
 	import {MAPPINGS} from "./src/modules/attributes/mappings.js";
 	import {PointMeasure} from "potree";
 
@@ -86,38 +86,32 @@
 	Potree.settings.hqsEnabled      = true;
 	Potree.settings.pointBudget     = 8_000_000;
 	Potree.settings.attribute       = "rgba";
-	Potree.settings.splatType       = SplatType.QUADS;
+	// Potree.settings.attribute = "intensity";
+	// Potree.settings.splatType       = SplatType.QUADS;
 	Potree.settings.splatType       = SplatType.POINTS;
 	Potree.settings.pointSize       = 2;
 	Potree.settings.minNodeSize     = 200;
 	Potree.settings.showBoundingBox = false;
 
 
-	let measure = new PointMeasure();
-	measure.markers.push(new Vector3(50, -250, 12));
-	potree.measure.measures.push(measure);
-
-	Potree.events.onFrameStart(() => {
-		let report = Potree.renderer.createResourceReport();
-
-		document.getElementById("msg_resources").innerText = report;
-	});
-
-
-
-	// let splats2 = await GSLoader.load("./resources/models/gardentable.ply");
-	let splats2 = await GSLoader.load("https://users.cg.tuwien.ac.at/mschuetz/permanent/potree-next/resources/gardentable.ply");
-	// let splats2 = await GSLoader.load("./resources/models/garden.ply");
-	scene.root.children.push(splats2);
-
-	Potree3Loader.load("https://users.cg.tuwien.ac.at/mschuetz/permanent/potree-next/resources/eclepens.potree").then(pointcloud => {
-		pointcloud.scale.set(0.005, 0.005, 0.005);
-		pointcloud.position.set(-2, -2, 1);
-		pointcloud.name = "Eclepens";
+	// PotreeLoader.load("./resources/pointclouds/wien_innenstadt/metadata.json").then(pointcloud => {
+	// PotreeLoader.load("https://users.cg.tuwien.ac.at/mschuetz/permanent/potree-next/resources/wien_innenstadt/metadata.json").then(pointcloud => {
+	PotreeLoader.load("https://potree.org/pointclouds/wien_innenstadt_converted/metadata.json").then(pointcloud => {
+		console.log(pointcloud);
 
 		scene.root.children.push(pointcloud);
-	});
 
+		// pointcloud.position.set(2547035.6, 1212135.1, 1022.5);
+		pointcloud.name = "Wien Innenstadt";
+
+		let material = pointcloud.material;
+		material.registerMapping(MAPPINGS.ELEVATION);
+
+		controls.set({
+			position: [2767.8, 341104.3, 183.9],
+			pivot:    [3044.4, 341144.2, 17.6]
+		});
+	});
 
 
 </script>

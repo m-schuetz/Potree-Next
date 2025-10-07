@@ -1,6 +1,5 @@
 <html>
 <head>
-<meta http-equiv="origin-trial" content="AmgwKkyLeQetn/dhGSsOlfOa/QLp1JOUgqyYSeFTadHtP83gkgHrDEj62CN//MgSjDbVwOY/LAr4qg/XyU2YYwMAAABdeyJvcmlnaW4iOiJodHRwczovL3BvdHJlZS5vcmc6NDQzIiwiZmVhdHVyZSI6IldlYkdQVSIsImV4cGlyeSI6MTY3NTIwOTU5OSwiaXNTdWJkb21haW4iOnRydWV9">
 <link rel="stylesheet" href="resources/potree.css">
 </head>
 <body style="padding: 0; margin: 0">
@@ -86,35 +85,22 @@
 	// standard CRS of 3D Tiles, see: https://docs.ogc.org/cs/22-025r4/22-025r4.html
 	proj4.defs("EPSG:4978","+proj=geocent +datum=WGS84 +units=m +no_defs +type=crs");
 
-	Potree.events.onFrameStart(() => {
-		document.getElementById("msg_resources").innerText = Potree.renderer.createResourceReport();
-	});
+	// Potree.events.onFrameStart(() => {
+	// 	document.getElementById("msg_resources").innerText = Potree.renderer.createResourceReport();
+	// });
 
 	// default, if not overriden later on
 	controls.set({
-		position: [2546905.2, 1211744.0, 953.8], 
+		position: [2546842.4, 1211476.1, 1094.5], 
 		pivot:    [2546909.4, 1211789.9, 925.9]
 	});
 
 	// * Awaiting the loaders is done to guarantee the order in which they appear in the GUI. It is not essential, though.
 
-	await TDTilesLoader.load("./resources/le_locle_est/LeLocle_objmCesium3DTiles.json").then(tiles => {
-	// await TDTilesLoader.load("https://sitn.ne.ch/3dtiles/le_locle_est/LeLocle_objmCesium3DTiles.json").then(tiles => {
+	// await TDTilesLoader.load("./resources/le_locle_est/LeLocle_objmCesium3DTiles.json").then(tiles => {
+	await TDTilesLoader.load("https://sitn.ne.ch/3dtiles/le_locle_est/LeLocle_objmCesium3DTiles.json").then(tiles => {
 		tiles.name = "le_locle_est";
 		tiles.projector = proj4("EPSG:4978", target_crs);
-
-		// let box = tiles.root.boundingVolume.toBox();
-		// let bbox = new Box3();
-
-		// bbox.expandByXYZ(...tiles.project([box.min.x, box.min.y, box.min.z]));
-		// bbox.expandByXYZ(...tiles.project([box.min.x, box.min.y, box.max.z]));
-		// bbox.expandByXYZ(...tiles.project([box.min.x, box.max.y, box.min.z]));
-		// bbox.expandByXYZ(...tiles.project([box.min.x, box.max.y, box.max.z]));
-		// bbox.expandByXYZ(...tiles.project([box.max.x, box.min.y, box.min.z]));
-		// bbox.expandByXYZ(...tiles.project([box.max.x, box.min.y, box.max.z]));
-		// bbox.expandByXYZ(...tiles.project([box.max.x, box.max.y, box.min.z]));
-		// bbox.expandByXYZ(...tiles.project([box.max.x, box.max.y, box.max.z]));
-		// tiles.boundingBox.copy(bbox);
 
 		scene.root.children.push(tiles);
 	});
@@ -123,10 +109,7 @@
 		scene.root.children.push(pointcloud);
 		pointcloud.name = "SITN 2022";
 	});
-		
 	
-
-
 </script>
 
 </body>

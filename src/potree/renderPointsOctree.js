@@ -209,9 +209,15 @@ function updateUniforms(octree, octreeState, drawstate, flags){
 		uniformsView.setFloat32(304, bb.min.x, true);
 		uniformsView.setFloat32(308, bb.min.y, true);
 		uniformsView.setFloat32(312, bb.min.z, true);
-		uniformsView.setFloat32(320, bb.max.z, true);
-		uniformsView.setFloat32(324, bb.max.z, true);
+		uniformsView.setFloat32(320, bb.max.x, true);
+		uniformsView.setFloat32(324, bb.max.y, true);
 		uniformsView.setFloat32(328, bb.max.z, true);
+		
+		let att = octree.attributes.attributes.find(a => a.name === "classification");
+		let classificationAttIndex = octree.attributes.attributes.indexOf(att);
+		classificationAttIndex = Number.isInteger(classificationAttIndex) ? classificationAttIndex : -1;
+		// classificationAttIndex = 5;
+		uniformsView.setInt32(332, classificationAttIndex, true);
 
 		// let attributeName = Potree.settings.attribute;
 		// let settings = octree?.material?.attributes?.get(attributeName);

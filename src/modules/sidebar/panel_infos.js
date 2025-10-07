@@ -50,6 +50,9 @@ class Panel{
 
 		valueRows += `
 			<tr>
+				<td>visible points</td>
+				<td>${Potree.state.numVisiblePoints.toLocaleString()}</td>
+			</tr><tr>
 				<td>rendered points</td>
 				<td>${Potree.state.numPoints.toLocaleString()}</td>
 			</tr><tr>

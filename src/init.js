@@ -430,6 +430,7 @@ function renderNotSoBasic(){
 	let points = renderables.get("Points") ?? [];
 	let octrees = renderables.get("PointCloudOctree") ?? [];
 
+	Potree.state.numVisiblePoints   = 0;
 	Potree.state.numPoints          = 0;
 	Potree.state.numVoxels          = 0;
 	Potree.state.numElements        = 0;
@@ -445,6 +446,8 @@ function renderNotSoBasic(){
 		if(Potree.settings.updateEnabled){
 			octree.updateVisibility(camera, renderer);
 		}
+
+		Potree.state.numVisiblePoints += octree.visibleNodes.map(n => n.numPoints).reduce( (a, v) => a + v, 0);
 
 		// let numPoints = octree.visibleNodes.map(n => n.geometry.numElements).reduce( (a, i) => a + i, 0);
 		// let numNodes = octree.visibleNodes.length;
@@ -921,7 +924,11 @@ function renderNotSoBasic(){
 			msg += `${totalMillies.toFixed(1).padStart(31)} ms\n`;
 
 
-			document.getElementById("msg_dbg").innerText = msg;
+			if(Potree.settings.showDebugMessages){
+				document.getElementById("msg_dbg").innerText = msg;
+			}else{
+				document.getElementById("msg_dbg").innerText = "";
+			}
 			
 			resultBuffer.unmap();
 

@@ -72,7 +72,11 @@ export const VECTOR3 = {
 				r = f32(readU16(offset + 0u));
 				g = f32(readU16(offset + 2u));
 				b = f32(readU16(offset + 4u));
-				// g = 255.0f;
+
+				// r = f32(offset) / 100.0f;
+				// r = f32(pointID) / 100.0f;
+				// r = clamp(r, 0.0f, 255.0f);
+				// b = 255.0f;
 			}else if(attrib.datatype == TYPES_UINT32){
 				r = f32(readU32(offset + 0u));
 				g = f32(readU32(offset + 4u));
@@ -96,7 +100,7 @@ export const VECTOR3 = {
 
 			var color = vec4f(r, g, b, 255.0) / 255.0;
 
-			// color.r = 1.0f;
+			// color.g = 1.0f;
 
 			return color;
 		}
@@ -132,7 +136,9 @@ export const ELEVATION = {
 		var octreeSize = uniforms.octreeMax - uniforms.octreeMin;
 
 		var value = (worldPos.z - uniforms.octreeMin.z) / octreeSize.z;
-		var w = value;
+		var w = value / 31.0f;
+		w = w + 0.2f;
+		w = worldPos.z / (octreeSize.z / 20.0f);
 
 		// var value = (uniforms.world * position).z;
 		// var w = (value - attrib.range_min.x) / (attrib.range_max.x - attrib.range_min.x);
@@ -145,6 +151,8 @@ export const ELEVATION = {
 		}else{
 			color = textureSampleLevel(gradientTexture, sampler_repeat, uv, 0.0);
 		}
+			// color = textureSampleLevel(gradientTexture, sampler_repeat, uv, 0.0);
+
 
 		return color;
 	}`

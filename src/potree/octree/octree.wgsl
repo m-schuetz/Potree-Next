@@ -1,20 +1,21 @@
 
 struct Uniforms {
-	world             : mat4x4f,       //   0
-	view              : mat4x4f,       //  64
-	proj              : mat4x4f,       // 128
-	worldView         : mat4x4f,       // 192
-	screen_width      : f32,           // 256
-	screen_height     : f32,           // 260
-	hqs_flag          : u32,           // 264
-	selectedAttribute : u32,           // 268
-	time              : f32,           // 272
-	pointSize         : f32,           // 276
-	splatType         : u32,           // 280
-	isAdditive        : u32,           // 284
-	spacing           : f32,           // 288
-	octreeMin         : vec3f,         // 304
-	octreeMax         : vec3f,         // 320
+	world                  : mat4x4f,       //   0
+	view                   : mat4x4f,       //  64
+	proj                   : mat4x4f,       // 128
+	worldView              : mat4x4f,       // 192
+	screen_width           : f32,           // 256
+	screen_height          : f32,           // 260
+	hqs_flag               : u32,           // 264
+	selectedAttribute      : u32,           // 268
+	time                   : f32,           // 272
+	pointSize              : f32,           // 276
+	splatType              : u32,           // 280
+	isAdditive             : u32,           // 284
+	spacing                : f32,           // 288
+	octreeMin              : vec3f,         // 304
+	octreeMax              : vec3f,         // 320
+	classificationAttIndex : i32,           // 336
 };
 
 struct Node {
@@ -412,7 +413,6 @@ fn main_vertex(vertex : VertexInput) -> VertexOutput {
 			}
 
 		}
-
 	}
 
 	output.position = projPos;
@@ -421,7 +421,7 @@ fn main_vertex(vertex : VertexInput) -> VertexOutput {
 	if(uniforms.hqs_flag > 0u){
 		output.position = output.position / output.position.w;
 
-		viewPos.z = viewPos.z * 1.01;
+		viewPos.z = viewPos.z * 1.005;
 		
 		var shifted : vec4<f32> = uniforms.proj * viewPos;
 		output.position.z = shifted.z / shifted.w;
@@ -475,6 +475,19 @@ fn main_vertex(vertex : VertexInput) -> VertexOutput {
 
 	if(output.color.a == 0.0){
 		output.position.w = 0.0;
+	}
+
+	if(uniforms.classificationAttIndex != -1)
+	{ // TEST: Filter classification
+
+		var attrib = attributes[uniforms.classificationAttIndex];
+		var offset = node.numPoints * attrib.offset + attrib.byteSize * pointID;
+		var value = readU8(offset);
+
+		if(value > 12){
+			// output.color = vec4f(1.0f, 0.0f, 0.0f, 1.0f);
+			output.position.w = 0.0;
+		}
 	}
 
 	output.point_id = node.counter + pointID;

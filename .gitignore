@@ -101,3 +101,12 @@ resources/pointclouds/lidar2022_las14_extra_attributes.las_converted/metadata.js
 resources/pointclouds/lidar2022_las14_extra_attributes.las_converted/log.txt
 resources/models/gardentable.ply
 resources/pointclouds/helimap/*
+resources/pointclouds/wien_innenstadt_v3.potree
+resources/pointclouds/lidar2022_las14_extra_attributes/hierarchy.bin
+resources/pointclouds/lidar2022_las14_extra_attributes/log.txt
+resources/pointclouds/lidar2022_las14_extra_attributes/metadata.json
+resources/pointclouds/lidar2022_las14_extra_attributes/octree.bin
+resources/pointclouds/wien_innenstadt/hierarchy.bin
+resources/pointclouds/wien_innenstadt/log.txt
+resources/pointclouds/wien_innenstadt/metadata.json
+resources/pointclouds/wien_innenstadt/octree.bin
