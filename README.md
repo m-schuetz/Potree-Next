@@ -12,6 +12,11 @@ This effort is funded by [Netidee](https://www.netidee.at/) and also has new cap
 
 A rewrite evidently has the disadvantage that many features that are currently present in Potree will initially be missing, but we will start out with other, new ones that Potree does not have. By the time WebGPU is widely supported in all browsers and devices -- including Linux and mobile devices --  we plan to catch up with most functionality.
 
+### Future
+
+Potree-Next will eventually replace [Potree 1.8](https://github.com/potree/potree/) once it reaches maturity and reimplements most features; and WebGPU is widely supported on Linux and mobile browsers.
+
+
 # Examples
 
 <table>
