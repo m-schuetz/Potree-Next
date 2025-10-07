@@ -41,12 +41,12 @@ Potree-Next will eventually replace [Potree 1.8](https://github.com/potree/potre
 
 * Convert your point cloud with [PotreeConverter](https://github.com/potree/PotreeConverter) or [PotreeDesktop](https://github.com/potree/potreedesktop).
 * Clone or download this repository.
-* Copy and adapt one of the examples, e.g., lion.html.
+* Copy and adapt one of the examples.
 * Run it in your web browser to see the results.
 	* To run it on your local machine, you can install [node.js](https://nodejs.org/en)
 	* Then install the "http-server" package system-wide (-g): <br>
 	  ```npm install -g http-server```
 	* Run the server from within the Potree-Next directory: <br>```http-server```
 	* Open one of the examples in your web browser, e.g.: <br>
-	  ```http://localhost:8080/lion.html```
+	  ```http://localhost:8080/extra_materials_terrasolid_sitn.html```
 * Once it works locally, you can upload the results to your file server to make it accessible online. Potree is a client-side renderer, so a simple file server without PHP, JS, etc. is sufficient. 
